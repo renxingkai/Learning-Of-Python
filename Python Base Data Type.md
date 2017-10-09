@@ -50,6 +50,71 @@ Python.
 \\\t\\
 ```
 
+* 对于单个字符的编码，Python提供了`ord()`函数获取字符的整数表示，`chr()`函数把编码转换为对应的字符：
+
+```python
+>>> ord('A')
+65
+>>> ord('中')
+20013
+>>> chr(66)
+'B'
+>>> chr(25991)
+'文'
+```
+
+* Python对`bytes`类型的数据用带`b`前缀的单引号或双引号表示：
+
+```python
+x = b'ABC'
+```
+
+* 以`Unicode`表示的`str`通过`encode()`方法可以编码为指定的`bytes`，例如：
+
+```python
+>>> 'ABC'.encode('ascii')
+b'ABC'
+>>> '中文'.encode('utf-8')
+b'\xe4\xb8\xad\xe6\x96\x87'
+>>> '中文'.encode('ascii')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+```
+
+* 纯英文的`str`可以用`ASCII`编码为`bytes`，内容是一样的，含有中文的`str`可以用`UTF-8`编码为`bytes`。含有中文的`str`无法用`ASCII`编码，因为中文编码的范围超过了`ASCII`编码的范围，Python会报错。
+
+* 如果我们从网络或磁盘上读取了字节流，那么读到的数据就是`bytes`。要把`bytes`变为`str`，就需要用`decode()`方法：
+
+```python
+>>> b'ABC'.decode('ascii')
+'ABC'
+>>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
+'中文'
+```
+
+* 要计算`str`包含多少个字符，可以用`len()`函数：
+
+```python
+>>> len('ABC')
+3
+>>> len('中文')
+2
+```
+
+* `len()`函数计算的是`str`的字符数，如果换成`bytes`，`len()`函数就计算字节数：
+
+```python
+>>> len(b'ABC')
+3
+>>> len(b'\xe4\xb8\xad\xe6\x96\x87')
+6
+>>> len('中文'.encode('utf-8'))
+6
+```
+
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;可见，1个中文字符经过`UTF-8`编码后通常会占用3个字节，而1个英文字符只占用1个字节。
+
 ## 布尔值
 
 * 一个布尔值只有`True`、`False`两种值，例如:
@@ -110,6 +175,40 @@ PI = 3.14159265359
 
 * 取余运算使用`%`运算符
 
+
+## 格式化
+
+* 在Python中，采用的格式化方式和C语言是一致的，用`%`实现，举例如下：
+
+```python
+>>> 'Hello, %s' % 'world'
+'Hello, world'
+>>> 'Hi, %s, you have $%d.' % ('Michael', 1000000)
+'Hi, Michael, you have $1000000.'
+```
+
+* 常见的占位符有：
+
+- %d    整数
+- %f	浮点数
+- %s	字符串
+- %x	十六进制整数
+
+* 其中，格式化整数和浮点数还可以指定是否补0和整数与小数的位数：
+
+```python
+>>> '%2d-%02d' % (3, 1)
+' 3-01'
+>>> '%.2f' % 3.1415926
+'3.14'
+```
+
+* 如果不确定用什么，`%s`永远起作用，它会把任何数据类型转换为字符串。
+
+* 如果字符串里面的`%`一个普通字符怎么办？这个时候就需要转义，用`%%`来表示一个`%`
+
+
+
 ## 练习
 
 ```python
@@ -124,4 +223,14 @@ Lisa!'''
 >>> print(s4)
 Hello,
 Lisa!
+
+
+
+
+
+>>> s1=72
+>>> s2=85
+>>> r=((85-72)/72)*100
+>>> print('%2.1f%%'%r)
+18.1%
 ```
